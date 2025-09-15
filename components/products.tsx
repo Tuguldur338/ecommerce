@@ -79,13 +79,17 @@ const Products = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center w-screen h-auto py-10 bg-white">
+    <div className="flex flex-col items-center justify-center max-w-screen h-auto py-10 bg-white">
       <div
         className="max-w-screen w-[98%] h-[1000px] flex items-start justify-start p-10 gap-5 bg-white rounded-[16px]"
         id="products"
       >
         <div className="w-full h-full">
-          <Carousel className="w-full h-full">
+          <Carousel
+            className="w-full h-full"
+            indicators={false}
+            interval={10000}
+          >
             {products.map((product, index) => (
               <Carousel.Item
                 key={index}
@@ -106,7 +110,7 @@ const Products = () => {
                   </p>
 
                   <h3 className="mt-3 text-center">
-                    ${" "}
+                    <span className="text-[23px]">$</span>
                     <span className="text-2xl font-bold">
                       {product.price.split(".")[0]}
                     </span>

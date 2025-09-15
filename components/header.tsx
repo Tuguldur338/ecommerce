@@ -12,7 +12,7 @@ import LogInSignUpModal from "./functions/handling-log-in-button";
 
 const Header = () => {
   return (
-    <header className="w-screen h-[100px] shadow-md items-center flex justify-center bg-white">
+    <header className="max-w-screen h-[100px] shadow-md items-center flex justify-center bg-white">
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom w-[98%] h-[80px] rounded-[40px] bg-gray-200">
         <div>
           <Image
