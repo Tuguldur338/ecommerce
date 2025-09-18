@@ -39,7 +39,7 @@ const LogInSignUpModal = () => {
         <Button
           variant="primary"
           onClick={handleShow}
-          className="!bg-blue-800 !border-none"
+          className="!bg-blue-800 !border-none hover:!bg-blue-900 hover:!scale-110 !transition-all duration-300"
         >
           Log In / Sign Up
         </Button>

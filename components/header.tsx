@@ -9,21 +9,23 @@ import { SiFacebook } from "react-icons/si";
 import { FaInstagramSquare } from "react-icons/fa";
 import Button from "react-bootstrap/Button";
 import LogInSignUpModal from "./functions/handling-log-in-button";
+import Link from "next/link";
 
 const Header = () => {
   return (
     <header className="max-w-screen h-[100px] shadow-md items-center flex justify-center bg-white">
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom w-[98%] h-[80px] rounded-[40px] bg-gray-200">
         <div>
-          <Image
-            src="/images/eccomerce-logo.png"
-            alt="Logo"
-            width={500}
-            height={500}
-            className="w-20 h-auto"
-          />
+          <Link href="/">
+            <Image
+              src="/images/eccomerce-logo.png"
+              alt="Logo"
+              width={500}
+              height={500}
+              className="w-20 h-auto cursor-pointer"
+            />
+          </Link>
         </div>
-
         <div>
           <Navbar expand="lg">
             <Container>
@@ -56,7 +58,6 @@ const Header = () => {
             </Container>
           </Navbar>
         </div>
-
         <div className="d-flex gap-4">
           <div>
             <SiFacebook className="text-3xl text-blue-800 cursor-pointer hover:text-blue-600 transition-colors duration-300" />
@@ -66,7 +67,6 @@ const Header = () => {
             <FaInstagramSquare className="text-3xl text-pink-600 cursor-pointer hover:text-pink-400 transition-colors duration-300" />
           </div>
         </div>
-
         <div>
           <LogInSignUpModal />
         </div>
