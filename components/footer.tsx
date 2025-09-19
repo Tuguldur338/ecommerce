@@ -72,7 +72,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="border-t border-gray-300 py-4 text-center text-sm text-gray-600">
-        © 2024 Erxes. All rights reserved.
+        © 2025 Erxes. All rights reserved.
       </div>
     </footer>
   );
