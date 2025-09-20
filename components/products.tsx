@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
-import { FaShoppingCart } from "react-icons/fa";
+import { FaShoppingCart, FaSearch } from "react-icons/fa";
 
 interface Product {
   name: string;
@@ -15,6 +14,9 @@ interface Product {
 
 const Products: React.FC = () => {
   const [cart, setCart] = useState<Product[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showCart, setShowCart] = useState(false);
+  const [animateCart, setAnimateCart] = useState(false);
 
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
@@ -28,11 +30,22 @@ const Products: React.FC = () => {
   const addToCart = (product: Product) => {
     if (!cart.some((p) => p.name === product.name)) {
       setCart((prev) => [...prev, product]);
+      triggerCartAnimation();
     }
   };
 
   const removeFromCart = (product: Product) => {
     setCart((prev) => prev.filter((p) => p.name !== product.name));
+  };
+
+  const toggleCart = () => {
+    setShowCart((prev) => !prev);
+    triggerCartAnimation();
+  };
+
+  const triggerCartAnimation = () => {
+    setAnimateCart(true);
+    setTimeout(() => setAnimateCart(false), 300);
   };
 
   const products: Product[] = [
@@ -99,87 +112,131 @@ const Products: React.FC = () => {
     },
   ];
 
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
+      {/* Main Products Section */}
       <div className="flex flex-col items-center justify-center max-w-screen h-auto py-10 bg-white">
         <div
           className="max-w-screen w-[98%] flex flex-wrap items-start justify-start p-10 gap-5 bg-white rounded-[16px]"
           id="products"
         >
-          {products.map((product) => {
-            const isInCart = cart.some((item) => item.name === product.name);
-            const [whole, decimal] = product.price.includes(".")
-              ? product.price.split(".")
-              : [product.price, "00"];
+          {/* Search section */}
+          <div className="flex w-screen h-[100px] items-center justify-center">
+            <div className="flex gap-[10px] group cursor-pointer">
+              <FaSearch size={20} />
+              <input
+                type="text"
+                placeholder="search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-0 group-hover:w-[150px] hover:outline-gray-300 transition-all duration-500 focus:!w-[150px] focus:outline-gray-300"
+              />
+            </div>
+          </div>
 
-            return (
-              <div
-                key={product.name}
-                className="flex flex-col items-center justify-center w-[400px] p-4 bg-gray-50 rounded-lg shadow h-[1000px]"
-              >
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  width={400}
-                  height={400}
-                  className="object-contain w-full h-auto"
-                />
+          {/* Products list */}
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => {
+              const isInCart = cart.some((item) => item.name === product.name);
+              const [whole, decimal] = product.price.includes(".")
+                ? product.price.split(".")
+                : [product.price, "00"];
 
-                <h4 className="mt-4 text-center">{product.name}</h4>
+              return (
+                <div
+                  key={product.name}
+                  className="flex flex-col w-[400px] p-4 bg-gray-50 rounded-lg shadow h-[1000px]"
+                >
+                  <div className="h-[800px]">
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      width={400}
+                      height={400}
+                      className="object-contain w-full h-auto"
+                    />
+                    <h4 className="mt-4 text-left">{product.name}</h4>
+                    <p className="mt-2 text-left">
+                      {product.description || "No description available"}
+                    </p>
+                    <h3 className="mt-3 text-left">
+                      <span className="text-[23px]">$</span>
+                      <span className="text-2xl font-bold">{whole}</span>
+                      {decimal && <span className="text-sm">.{decimal}</span>}
+                    </h3>
+                  </div>
 
-                <p className="mt-2 text-center">
-                  {product.description || "No description available"}
-                </p>
+                  <div className="flex items-center justify-start gap-5 mt-4">
+                    <Button
+                      variant={isInCart ? "secondary" : "success"}
+                      className="!border-none w-[140px] h-[50px] hover:!scale-110 !transition-all duration-300"
+                      onClick={() =>
+                        isInCart ? removeFromCart(product) : addToCart(product)
+                      }
+                    >
+                      {isInCart ? "Added to cart" : "Add to cart"}
+                    </Button>
 
-                <h3 className="mt-3 text-center">
-                  <span className="text-[23px]">$</span>
-                  <span className="text-2xl font-bold">{whole}</span>
-                  {decimal && <span className="text-sm">.{decimal}</span>}
-                </h3>
-
-                <div className="flex items-center justify-center gap-5 mt-4">
-                  <Button
-                    variant={isInCart ? "secondary" : "success"}
-                    className="!border-none w-[140px] h-[50px] hover:!scale-110 transition-all duration-300"
-                    onClick={() =>
-                      isInCart ? removeFromCart(product) : addToCart(product)
-                    }
-                  >
-                    {isInCart ? "Added to cart" : "Add to cart"}
-                  </Button>
-                  
-                  <Button
-                    variant="danger"
-                    className="!border-none w-[140px] h-[50px] hover:!scale-110 hover:!bg-red-600 transition-all duration-300"
-                    onClick={() => removeFromCart(product)}
-                    disabled={!isInCart}
-                  >
-                    Remove item
-                  </Button>
+                    <Button
+                      variant="danger"
+                      className="!border-none w-[140px] h-[50px] hover:!scale-110 hover:!bg-red-600 !transition-all duration-300"
+                      onClick={() => removeFromCart(product)}
+                      disabled={!isInCart}
+                    >
+                      Remove item
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          ) : (
+            <p className="text-gray-500 text-center w-full">
+              No products found.
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Shopping Cart */}
-      <div className="fixed top-4 right-4 z-50 bg-white p-4 rounded shadow-lg w-[220px] max-h-[80vh] overflow-y-auto border border-gray-300">
-        <Link
-          href="/AddedToCart"
-          className="flex items-center gap-2 mb-4 border-b border-gray-300 pb-2"
-        >
+      {/* Shopping Cart Icon */}
+      <div
+        className="fixed top-24 right-4 z-50 cursor-pointer"
+        onClick={toggleCart}
+      >
+        <div className="relative">
           <FaShoppingCart
             size={28}
             className="text-black hover:text-gray-500 transition"
           />
-          <span className="flex w-6 h-6 rounded-full bg-red-600 text-white text-center justify-center items-center text-sm">
+          <span className="absolute -top-2 -right-2 flex w-6 h-6 rounded-full bg-red-600 text-white text-center justify-center items-center text-sm">
             {cart.length}
           </span>
-        </Link>
+        </div>
+      </div>
+
+      {/* Cart Panel */}
+      <div
+        className={`fixed top-24 right-4 z-50 bg-white p-4 rounded shadow-lg w-[240px] max-h-[80vh] overflow-y-auto border border-gray-300 transition-all duration-300 ${
+          showCart
+            ? "opacity-100 scale-100 pointer-events-auto"
+            : "opacity-0 scale-95 pointer-events-none"
+        }`}
+      >
+        {/* Close Button */}
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={() => setShowCart(false)}
+            className="text-gray-500 hover:text-gray-800 transition text-lg font-bold"
+          >
+            ×
+          </button>
+        </div>
 
         <div className="flex flex-col">
-          {cart.length > 0 &&
+          {cart.length > 0 ? (
             cart.map((product, index) => (
               <div key={product.name} className="mb-2">
                 <p className="text-sm">
@@ -187,7 +244,10 @@ const Products: React.FC = () => {
                 </p>
                 <p className="text-xs text-gray-400">${product.price}</p>
               </div>
-            ))}
+            ))
+          ) : (
+            <p className="text-gray-500 text-center">Cart is empty.</p>
+          )}
         </div>
       </div>
     </>

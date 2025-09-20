@@ -5,8 +5,6 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { SiFacebook } from "react-icons/si";
-import { FaInstagramSquare } from "react-icons/fa";
 import Button from "react-bootstrap/Button";
 import LogInSignUpModal from "./functions/handling-log-in-button";
 import Link from "next/link";
@@ -58,15 +56,7 @@ const Header = () => {
             </Container>
           </Navbar>
         </div>
-        <div className="d-flex gap-4">
-          <div>
-            <SiFacebook className="text-3xl text-blue-800 cursor-pointer hover:text-blue-600 transition-colors duration-300" />
-          </div>
 
-          <div>
-            <FaInstagramSquare className="text-3xl text-pink-600 cursor-pointer hover:text-pink-400 transition-colors duration-300" />
-          </div>
-        </div>
         <div>
           <LogInSignUpModal />
         </div>
