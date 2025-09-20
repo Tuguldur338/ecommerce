@@ -30,13 +30,6 @@ const GoShoppingButton = () => {
         >
           Go shopping
         </Link>
-
-        <Link
-          href={"/Privacy"}
-          className="!no-underline hover:!text-blue-300 transition-all duration-300"
-        >
-          Go to our cookie terms page!
-        </Link>
       </div>
 
       <CookieTerms />

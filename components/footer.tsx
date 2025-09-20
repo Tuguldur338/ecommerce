@@ -8,7 +8,7 @@ const Footer = () => {
     <footer className="w-[100%] bg-gray-200 shadow-md my-auto">
       <div className="max-w-screen-xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
-          <p>Powered by Anu-ujin @2025</p>
+          <p>Powered by Tuguldur @2025</p>
 
           <p className="text-gray-600 text-sm">
             Your trusted ecommerce store for the best products at the best

@@ -93,4 +93,5 @@ body {
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   filter: invert(1);
+  z-index: 1000;
 }
