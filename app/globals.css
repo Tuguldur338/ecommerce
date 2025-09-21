@@ -37,13 +37,16 @@
   --neon-glow-purple: 0 0 20px #8338ec;
   --neon-glow-cyan: 0 0 20px #00f5ff;
   --neon-glow-yellow: 0 0 20px #ffff00;
+
+  /* Facebook preferred color */
+  --fb-logo: #0866ff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-geist-sans, Arial, sans-serif);
+  --font-mono: var(--font-geist-mono, monospace);
 
   /* Neon Colors for Tailwind */
   --color-neon-pink: var(--neon-pink);

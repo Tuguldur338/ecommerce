@@ -4,10 +4,10 @@ import React from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Button from "react-bootstrap/Button";
 import LogInSignUpModal from "./functions/handling-log-in-button";
 import Link from "next/link";
+import { SiFacebook } from "react-icons/si";
+import { FaInstagramSquare } from "react-icons/fa";
 
 const Header = () => {
   return (
@@ -32,21 +32,21 @@ const Header = () => {
               <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="me-auto">
                   <Nav.Link
-                    href="#about"
+                    href="/About"
                     className="cursor-pointer relative after:content-[''] after:block after:w-0 after:h-[2px] after:bg-gray-900 after:transition-all after:duration-300 hover:after:w-full hover:after:bg-blue-800 !text-blue-800 !font-semibold pb-[5px] ml-4"
                   >
                     About
                   </Nav.Link>
 
                   <Nav.Link
-                    href="#products"
+                    href="/AllProducts"
                     className="cursor-pointer relative after:content-[''] after:block after:w-0 after:h-[2px] after:bg-gray-900 after:transition-all after:duration-300 hover:after:w-full hover:after:bg-blue-800 !text-blue-800 !font-semibold pb-[5px] ml-4"
                   >
                     Products
                   </Nav.Link>
 
                   <Nav.Link
-                    href="#contactUs"
+                    href="/ContactUs"
                     className="cursor-pointer relative after:content-[''] after:block after:w-0 after:h-[2px] after:bg-gray-900 after:transition-all after:duration-300 hover:after:w-full hover:after:bg-blue-800 !text-blue-800 !font-semibold pb-[5px] ml-4"
                   >
                     Contact us

@@ -13,7 +13,9 @@ interface Product {
 }
 
 const Products: React.FC = () => {
-  const [cart, setCart] = useState<Product[]>([]);
+  const [cart, setCart] = useState<{ product: Product; quantity: number }[]>(
+    []
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [showCart, setShowCart] = useState(false);
   const [animateCart, setAnimateCart] = useState(false);
@@ -28,14 +30,30 @@ const Products: React.FC = () => {
   }, [cart]);
 
   const addToCart = (product: Product) => {
-    if (!cart.some((p) => p.name === product.name)) {
-      setCart((prev) => [...prev, product]);
-      triggerCartAnimation();
-    }
+    setCart((prev) => {
+      const existing = prev.find((p) => p.product.name === product.name);
+      if (existing) {
+        return prev.map((p) =>
+          p.product.name === product.name
+            ? { ...p, quantity: p.quantity + 1 }
+            : p
+        );
+      }
+      return [...prev, { product, quantity: 1 }];
+    });
+    triggerCartAnimation();
   };
 
   const removeFromCart = (product: Product) => {
-    setCart((prev) => prev.filter((p) => p.name !== product.name));
+    setCart((prev) =>
+      prev
+        .map((p) =>
+          p.product.name === product.name
+            ? { ...p, quantity: p.quantity - 1 }
+            : p
+        )
+        .filter((p) => p.quantity > 0)
+    );
   };
 
   const toggleCart = () => {
@@ -70,7 +88,7 @@ const Products: React.FC = () => {
     },
     {
       name: "Kafri Dual Headphone Stand with USB charger",
-      image: "/images/kafri-Dual-Headphone-Stand-With-USB-Charger.webp",
+      image: "/images/steelSeries-Apex3-TKL-RGB-GamingKeyboard.webp",
       description: "",
       price: "26.99",
     },
@@ -116,12 +134,23 @@ const Products: React.FC = () => {
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const getTotalItems = () =>
+    cart.reduce((total, item) => total + item.quantity, 0);
+
+  const getTotalPrice = () =>
+    cart.reduce(
+      (total, item) =>
+        total +
+        parseFloat(item.product.price.replace(/,/g, "")) * item.quantity,
+      0
+    );
+
   return (
     <>
       {/* Main Products Section */}
       <div className="flex flex-col items-center justify-center max-w-screen h-auto py-10 bg-white">
         <div
-          className="max-w-screen w-[98%] flex flex-wrap items-start justify-start p-10 gap-5 bg-white rounded-[16px]"
+          className="max-w-screen w-[98%] flex flex-wrap items-start justify-center p-10 gap-5 bg-white rounded-[16px]"
           id="products"
         >
           {/* Search section */}
@@ -141,7 +170,10 @@ const Products: React.FC = () => {
           {/* Products list */}
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => {
-              const isInCart = cart.some((item) => item.name === product.name);
+              const cartItem = cart.find(
+                (item) => item.product.name === product.name
+              );
+              const isInCart = Boolean(cartItem);
               const [whole, decimal] = product.price.includes(".")
                 ? product.price.split(".")
                 : [product.price, "00"];
@@ -149,20 +181,25 @@ const Products: React.FC = () => {
               return (
                 <div
                   key={product.name}
-                  className="flex flex-col w-[400px] p-4 bg-gray-50 rounded-lg shadow h-[1000px]"
+                  className="flex flex-col w-[400px] p-4 bg-gray-50 rounded-lg shadow h-[700px]"
                 >
-                  <div className="h-[800px]">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      width={400}
-                      height={400}
-                      className="object-contain w-full h-auto"
-                    />
+                  <div className="flex flex-col max-w-fit h-[800px] items-center">
+                    <div className="h-[300px] flex justify-center">
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        width={400}
+                        height={400}
+                        className="object-contain w-[50%] h-auto"
+                      />
+                    </div>
+
                     <h4 className="mt-4 text-left">{product.name}</h4>
-                    <p className="mt-2 text-left">
+
+                    <p className="mt-2 text-left h-[100px]">
                       {product.description || "No description available"}
                     </p>
+
                     <h3 className="mt-3 text-left">
                       <span className="text-[23px]">$</span>
                       <span className="text-2xl font-bold">{whole}</span>
@@ -172,13 +209,16 @@ const Products: React.FC = () => {
 
                   <div className="flex items-center justify-start gap-5 mt-4">
                     <Button
-                      variant={isInCart ? "secondary" : "success"}
-                      className="!border-none w-[140px] h-[50px] hover:!scale-110 !transition-all duration-300"
-                      onClick={() =>
-                        isInCart ? removeFromCart(product) : addToCart(product)
-                      }
+                      variant="success"
+                      className="!border-none w-[140px] h-[50px] hover:!scale-110 !transition-all duration-300 flex items-center justify-center gap-2"
+                      onClick={() => addToCart(product)}
                     >
-                      {isInCart ? "Added to cart" : "Add to cart"}
+                      Add to cart
+                      {cartItem && (
+                        <span className="ml-2 bg-white text-green-600 rounded-full px-2 py-1 text-sm font-bold">
+                          {cartItem.quantity}
+                        </span>
+                      )}
                     </Button>
 
                     <Button
@@ -203,7 +243,7 @@ const Products: React.FC = () => {
 
       {/* Shopping Cart Icon */}
       <div
-        className="fixed top-24 right-4 z-50 cursor-pointer"
+        className="absolute top-24 right-4 z-50 cursor-pointer"
         onClick={toggleCart}
       >
         <div className="relative">
@@ -212,7 +252,7 @@ const Products: React.FC = () => {
             className="text-black hover:text-gray-500 transition"
           />
           <span className="absolute -top-2 -right-2 flex w-6 h-6 rounded-full bg-red-600 text-white text-center justify-center items-center text-sm">
-            {cart.length}
+            {getTotalItems()}
           </span>
         </div>
       </div>
@@ -237,17 +277,33 @@ const Products: React.FC = () => {
 
         <div className="flex flex-col">
           {cart.length > 0 ? (
-            cart.map((product, index) => (
-              <div key={product.name} className="mb-2">
+            cart.map((item, index) => (
+              <div key={item.product.name} className="mb-2">
                 <p className="text-sm">
-                  {index + 1}. {product.name}
+                  {index + 1}. {item.product.name} (x{item.quantity})
                 </p>
-                <p className="text-xs text-gray-400">${product.price}</p>
+                <p className="text-xs text-gray-400">${item.product.price}</p>
               </div>
             ))
           ) : (
             <p className="text-gray-500 text-center">Cart is empty.</p>
           )}
+        </div>
+
+        <div className="mt-4 border-t pt-2">
+          <h4 className="font-semibold">Total:</h4>
+
+          <div className="flex items-center text-lg font-bold mb-[10px]">
+            <span>$</span>
+
+            <span>{getTotalPrice().toFixed(2)}</span>
+          </div>
+
+          <div>
+            <Button variant="success">
+              Buy Now <span style={{ color: "red" }}>In progress</span>
+            </Button>
+          </div>
         </div>
       </div>
     </>
